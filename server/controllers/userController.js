@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const nonces = require('../db/models/nonceSchema');
-const { ethers } = require('ethers');
+const ethers = require('ethers');
 const jwt = require('jsonwebtoken');
 const users = require('../db/models/userSchema');
 
@@ -50,7 +50,7 @@ const verifySignature = async (req, res) => {
         }
 
         const verifiableMessage = `${message}${nonceDoc.nonce}`;
-        const signerAddress = ethers.utils.verifyMessage(verifiableMessage, signature);
+        const signerAddress = ethers.verifyMessage(verifiableMessage, signature);
 
         if (signerAddress.toLowerCase() === walletAddress.toLowerCase()) {
             // Create user if not already in DB
