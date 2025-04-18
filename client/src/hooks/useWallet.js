@@ -1,34 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ethers } from 'ethers';
 
 const useWallet = () => {
-  const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
 
-  const getEthereumObject = () => window.ethereum;
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && getEthereumObject()) {
-      const browserProvider = new ethers.BrowserProvider(getEthereumObject());
-      setProvider(browserProvider);
-    } else {
-        alert('Install MetaMask');
-      console.error('MetaMask is not installed.');
-    }
-  }, []);
-
-  useEffect(() => {
-    const initializeSignerAndContract = async () => {
-      if (provider) {
-        const signer = await provider.getSigner();
-        setSigner(signer);
+  const connectWallet = async () => {
+    try {
+      if (typeof window === 'undefined' || !window.ethereum) {
+        alert('Please install MetaMask');
+        return;
       }
-    };
 
-    initializeSignerAndContract();
-  }, [provider]);
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      console.log(signer);
+      
+      setSigner(signer);
+      return signer;
+    } catch (error) {
+      console.error("Wallet connection failed:", error);
+      throw error;
+    }
+  };
 
-  return { signer };
+  return { signer, connectWallet };
 };
 
 export default useWallet;

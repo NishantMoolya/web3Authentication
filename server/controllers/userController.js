@@ -13,6 +13,8 @@ const getNonce = async (req, res) => {
     try {
         const { walletAddress } = req.body;
 
+        console.log(walletAddress);
+        
         if (!walletAddress) {
             return res.status(400).json({ data: null, error: "walletAddress is required" });
         }
@@ -29,6 +31,8 @@ const getNonce = async (req, res) => {
         const newNonce = new nonces({ walletAddress:walletAddress.toLowerCase(), nonce });
         await newNonce.save();
 
+        console.log(nonce);
+        
         res.status(201).json({ data: `${message}${nonce}`, error: null });
 
     } catch (err) {
@@ -40,6 +44,8 @@ const getNonce = async (req, res) => {
 const verifySignature = async (req, res) => {
     try {
         const { walletAddress, signature, role } = req.body;
+        console.log(signature);
+        
 
         if (!walletAddress || !signature) {
             return res.status(400).json({ data: null, error: "walletAddress and signature are required" });
@@ -53,6 +59,8 @@ const verifySignature = async (req, res) => {
         const verifiableMessage = `${message}${nonceDoc.nonce}`;
         const signerAddress = ethers.verifyMessage(verifiableMessage, signature);
 
+        console.log(verifiableMessage,"  ",signerAddress);
+        
         if (signerAddress.toLowerCase() !== walletAddress.toLowerCase()) {
             return res.status(401).json({ data: null, error: "Invalid signature" });
         }
@@ -100,4 +108,92 @@ const verifySignature = async (req, res) => {
     }
 };
 
-module.exports = { verifySignature,getNonce }
+const updateProfile = async (req, res) => {
+    try {
+      const { address: walletAddress, role } = req.user; // Extracted from JWT
+      const updates = req.body;       // all updatable fields
+  
+      if (!address || !role) {
+        return res.status(400).json({ error: "walletAddress (in params) and role (in body) are required." });
+      }
+  
+      // Choose correct model
+      let model;
+      switch (role.toLowerCase()) {
+        case 'patient':
+          model = Patients;
+          break;
+        case 'doctor':
+          model = Doctors;
+          break;
+        case 'staff':
+          model = Staffs;
+          break;
+        default:
+          return res.status(400).json({ error: "Invalid role provided." });
+      }
+  
+      // Update profile
+      const updatedUser = await model.findOneAndUpdate(
+        { walletAddress: address.toLowerCase() },
+        { $set: updates },
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ error: `${role} not found.` });
+      }
+  
+      res.status(200).json(updatedUser);
+  
+    } catch (error) {
+      console.error("Profile update error:", error);
+      res.status(500).json({ error: error.message });
+    }
+  };
+
+const getProfile = async (req, res) => {
+    try {
+      const { address: walletAddress, role } = req.user; // Extracted from JWT
+      const updates = req.body;       // all updatable fields
+  
+      if (!address || !role) {
+        return res.status(400).json({ error: "walletAddress (in params) and role (in body) are required." });
+      }
+  
+      // Choose correct model
+      let model;
+      switch (role.toLowerCase()) {
+        case 'patient':
+          model = Patients;
+          break;
+        case 'doctor':
+          model = Doctors;
+          break;
+        case 'staff':
+          model = Staffs;
+          break;
+        default:
+          return res.status(400).json({ error: "Invalid role provided." });
+      }
+  
+      // Update profile
+      const updatedUser = await model.findOneAndUpdate(
+        { walletAddress: address.toLowerCase() },
+        { $set: updates },
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ error: `${role} not found.` });
+      }
+  
+      res.status(200).json(updatedUser);
+  
+    } catch (error) {
+      console.error("Profile update error:", error);
+      res.status(500).json({ error: error.message });
+    }
+  };
+
+module.exports = { verifySignature,getNonce,updateProfile }
