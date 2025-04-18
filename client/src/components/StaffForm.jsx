@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function DoctorForm() {
-  const [doctor, setDoctor] = useState({
+export default function StaffForm() {
+  const [staff, setStaff] = useState({
     name: '',
-    specialty: '',
-    phone: '',
     email: '',
+    phone: '',
     gender: '',
-    city: '',
-    practiceYears: '',
-    licenseNo: '',
-    registrationYear: ''
+    department: '',
+    residence: '',
+    yearsOfExperience: '',
   });
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDoctor({ ...doctor, [name]: value });
+    setStaff((prevStaff) => ({
+      ...prevStaff,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Doctor Data Submitted:', doctor);
-    // navigate('/doctor-dashboard');
+    console.log('Staff data submitted:', staff);
+    // navigate('/staff-list'); // Uncomment if needed
   };
 
   return (
@@ -34,13 +35,13 @@ export default function DoctorForm() {
         className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md space-y-4"
       >
         <h2 className="text-2xl font-bold text-center text-purple-800">
-          Doctor Information
+          Staff Information
         </h2>
 
         <input
           name="name"
           placeholder="Full Name"
-          value={doctor.name}
+          value={staff.name}
           onChange={handleChange}
           className="w-full p-3 border rounded-lg"
           required
@@ -49,22 +50,23 @@ export default function DoctorForm() {
           name="email"
           type="email"
           placeholder="Email"
-          value={doctor.email}
+          value={staff.email}
           onChange={handleChange}
           className="w-full p-3 border rounded-lg"
           required
         />
         <input
-          name="specialty"
-          placeholder="Specialization"
-          value={doctor.specialty}
+          name="phone"
+          type="tel"
+          placeholder="Phone Number"
+          value={staff.phone}
           onChange={handleChange}
           className="w-full p-3 border rounded-lg"
           required
         />
         <select
           name="gender"
-          value={doctor.gender}
+          value={staff.gender}
           onChange={handleChange}
           className="w-full p-3 border rounded-lg"
           required
@@ -75,44 +77,26 @@ export default function DoctorForm() {
           <option>Other</option>
         </select>
         <input
-          name="phone"
-          placeholder="Phone Number"
-          value={doctor.phone}
+          name="department"
+          placeholder="Department"
+          value={staff.department}
           onChange={handleChange}
           className="w-full p-3 border rounded-lg"
           required
         />
         <input
-          name="city"
-          placeholder="Resident City"
-          value={doctor.city}
+          name="residence"
+          placeholder="Residence"
+          value={staff.residence}
           onChange={handleChange}
           className="w-full p-3 border rounded-lg"
           required
         />
         <input
-          name="practiceYears"
-          placeholder="Years of Practice"
+          name="yearsOfExperience"
           type="number"
-          value={doctor.practiceYears}
-          onChange={handleChange}
-          className="w-full p-3 border rounded-lg"
-          required
-        />
-        <input
-          name="licenseNo"
-          placeholder="License Number"
-          type="text"
-          value={doctor.licenseNo}
-          onChange={handleChange}
-          className="w-full p-3 border rounded-lg"
-          required
-        />
-        <input
-          name="registrationYear"
-          placeholder="Year of Registration"
-          type="number"
-          value={doctor.registrationYear}
+          placeholder="Years of Experience"
+          value={staff.yearsOfExperience}
           onChange={handleChange}
           className="w-full p-3 border rounded-lg"
           required
@@ -120,7 +104,7 @@ export default function DoctorForm() {
 
         <button
           type="submit"
-          className="w-full py-3 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition"
+          className="w-full bg-purple-600 text-white p-3 rounded-lg hover:bg-purple-700 transition duration-200"
         >
           Submit
         </button>

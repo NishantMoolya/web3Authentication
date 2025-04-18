@@ -15,10 +15,10 @@ const App = () => {
       <Router>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path="/login" element={<Private><Login /></Private>} />
-          <Route path="/profile" element={<Private><Profile /></Private>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/dasboard" element={<Dashboard />}>
-            <Route path="permissions" index element={<Permissions />} />
+            <Route path="permissions"  element={<Permissions />} />
             <Route path="records" element={<Records />} />
             <Route path="chat" element={<ChatBot />} />
           </Route>

@@ -18,6 +18,5 @@ app.get('/', (req,res) => {res.status(200).send('hello bro')});
 
 app.use('/v1/api/user',userRouter);
 
-
 app.listen(port,() => console.log(`server is running at port:${port}`));
 

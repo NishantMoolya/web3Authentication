@@ -13,7 +13,7 @@ const getNonce = async (req, res) => {
     try {
         const { walletAddress } = req.body;
 
-        console.log(walletAddress);
+        // console.log(walletAddress);
         
         if (!walletAddress) {
             return res.status(400).json({ data: null, error: "walletAddress is required" });
@@ -44,7 +44,7 @@ const getNonce = async (req, res) => {
 const verifySignature = async (req, res) => {
     try {
         const { walletAddress, signature, role } = req.body;
-        console.log(signature);
+        // console.log(signature);
         
 
         if (!walletAddress || !signature) {
@@ -152,16 +152,15 @@ const updateProfile = async (req, res) => {
     }
   };
 
-const getProfile = async (req, res) => {
+  const getProfile = async (req, res) => {
     try {
-      const { address: walletAddress, role } = req.user; // Extracted from JWT
-      const updates = req.body;       // all updatable fields
+      const { walletAddress, role } = req.user;
   
-      if (!address || !role) {
-        return res.status(400).json({ error: "walletAddress (in params) and role (in body) are required." });
+      if (!walletAddress || !role) {
+        return res.status(400).json({ error: 'walletAddress and role are required from token.' });
       }
   
-      // Choose correct model
+      // Select model based on role
       let model;
       switch (role.toLowerCase()) {
         case 'patient':
@@ -174,26 +173,30 @@ const getProfile = async (req, res) => {
           model = Staffs;
           break;
         default:
-          return res.status(400).json({ error: "Invalid role provided." });
+          return res.status(400).json({ error: 'Invalid role provided in token.' });
       }
   
-      // Update profile
-      const updatedUser = await model.findOneAndUpdate(
-        { walletAddress: address.toLowerCase() },
-        { $set: updates },
-        { new: true }
-      );
+      // Query user by wallet address (case-insensitive)
+      const user = await model.findOne({ walletAddress: walletAddress.toLowerCase() });
   
-      if (!updatedUser) {
-        return res.status(404).json({ error: `${role} not found.` });
+      if (user) {
+        return res.status(200).json({
+          auth: true,
+          userProfile: {
+            id: user._id,
+            walletAddress: user.walletAddress,
+            role: role,
+            // add any custom fields from schema
+            ...user._doc  // return entire document if needed
+          }
+        });
+      } else {
+        return res.status(404).json({ auth: false,userProfile:null, error: `${role} not found.` });
       }
-  
-      res.status(200).json(updatedUser);
-  
     } catch (error) {
-      console.error("Profile update error:", error);
-      res.status(500).json({ error: error.message });
+      console.error('Error fetching profile:', error);
+      res.status(500).json({ auth: false,userProfile:null,error: 'Server error' });
     }
   };
-
-module.exports = { verifySignature,getNonce,updateProfile }
+  
+module.exports = { verifySignature,getNonce,updateProfile,getProfile }
