@@ -1,3 +1,16 @@
+const registerAsDoctor = async () => {
+    if (!contract) return;
+    try {
+      const tx = await contract.registerAsDoctor();
+      await tx.wait();
+      alert("Registered as Doctor!");
+    } catch (error) {
+      console.error("Error registering as doctor:", error);
+      alert("Registration failed!");
+    }
+  };
+
+
 const requestAccess = async (contract,patientAddress) => {
     if (!contract) return;
     try {

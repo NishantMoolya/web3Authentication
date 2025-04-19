@@ -99,7 +99,7 @@ export default function StaffForm() {
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input
                 name="email"
-                placeholder="Email"
+                placeholder="Email Address"
                 value={staff.email}
                 onChange={handleChange}
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9B65FF]/30 focus:border-[#9B65FF] transition-all"

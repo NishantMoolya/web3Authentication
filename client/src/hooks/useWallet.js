@@ -13,10 +13,10 @@ const useWallet = () => {
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contractInstance = new ethers.Contract(contractAddress, ContractABI.abi, signer);
+      // const contractInstance = new ethers.Contract(contractAddress, ContractABI.abi, signer);
       console.log(signer);
       
-      setContract(contractInstance);
+      // setContract(contractInstance);
       setSigner(signer);
       return signer;
     } catch (error) {

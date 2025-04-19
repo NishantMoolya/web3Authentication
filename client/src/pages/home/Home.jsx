@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Shield, Lock, FileText, UserCheck, ChevronRight, Database, ArrowRight } from "lucide-react"
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false)
@@ -65,7 +67,7 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
               to="/login"
-              className="px-8 py-4 rounded-lg bg-gradient-to-r from-[#9B65FF] to-[#F2613F] text-white font-medium text-lg flex items-center justify-center hover:opacity-90 transition-opacity shadow-lg"
+              className="px-8 py-4 rounded-lg bg-gradient-to-r from-[#9B65FF] to-[#F2613F] text-white font-medium text-lg flex items-center justify-center hover:opacity-90 transition-opacity"
             >
               Get Started <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
@@ -77,19 +79,21 @@ const Home = () => {
             </a>
           </div>
         </motion.div>
+
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="md:w-1/2"
+          className="md:w-1/2 flex justify-center"
         >
-          <img
-            src="/placeholder.svg?height=500&width=600"
-            alt="Medical Records Blockchain Illustration"
-            className="w-full h-auto rounded-xl shadow-2xl"
+          <DotLottieReact
+            src="https://lottie.host/34a7119f-1b1e-4739-bdfc-0bee905a0a77/18p0qutuUv.lottie"
+            loop
+            autoplay
           />
         </motion.div>
       </section>
+
 
       {/* Features Section */}
       <section id="features" className="bg-white py-20">
@@ -102,7 +106,7 @@ const Home = () => {
               transition={{ duration: 0.6 }}
               className="text-3xl md:text-4xl font-bold mb-4"
             >
-              Why Choose <span className="text-[#F2613F]">MedChain</span>
+              Why Choose <span className="text-[#F2613F]">MedLock</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -260,19 +264,18 @@ const Home = () => {
       <section id="security" className="py-20 bg-white">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="md:w-1/2 mb-12 md:mb-0"
-            >
-              <img
-                src="/placeholder.svg?height=400&width=500"
-                alt="Blockchain Security Illustration"
-                className="w-full h-auto rounded-xl shadow-xl"
-              />
-            </motion.div>
+          <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="md:w-1/2 flex justify-center"
+        >
+          <DotLottieReact
+              src="https://lottie.host/8bf0dfe7-a8d2-4bc2-adb8-b947a7e2ebe0/YCusDq54jZ.lottie"
+            loop
+            autoplay
+          />
+        </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -360,7 +363,7 @@ const Home = () => {
         </div>
       </section>
 
-     
+
     </div>
   )
 }
