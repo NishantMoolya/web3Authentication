@@ -4,9 +4,9 @@ import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Send, User, Bot, Paperclip, Mic, ImageIcon } from "lucide-react"
 
-export default function ChatBot() {
+export default function ChatBot({ patient_id = "12345"}) {
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hello! How can I help you today?", sender: "bot", time: "10:00 AM" },
+    { id: 1, content: "Hello! How can I help you today?", role: "ai", time: "10:00 AM" },
   ])
   const [input, setInput] = useState("")
   const messagesEndRef = useRef(null)
@@ -19,41 +19,37 @@ export default function ChatBot() {
     scrollToBottom()
   }, [messages])
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim() === "") return
 
     // Add user message
     const userMessage = {
       id: messages.length + 1,
-      text: input,
-      sender: "user",
+      content: input,
+      role: "user",
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     }
 
     setMessages((prev) => [...prev, userMessage])
     setInput("")
 
-    // Simulate bot response after a delay
-    setTimeout(() => {
-      const botResponses = [
-        "I understand your question. Let me help you with that.",
-        "That's an interesting point. Here's what I think...",
-        "I'm processing your request. Give me a moment.",
-        "I've found some information that might help you.",
-        "Let me check our database for that information.",
-      ]
+    const res = await fetch('http://localhost:8000/api/v1/ask', {
+      method:"POST",
+      headers:{
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({ patient_id:patient_id,chat_history:messages.map(item => ({ role:item.role,content:item.content })),query:input})
+    })
+    const data = await res.json();
 
-      const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)]
+    const botMessage = {
+      id: messages.length + 2,
+      content: data.response,
+      role: "ai",
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    }
 
-      const botMessage = {
-        id: messages.length + 2,
-        text: randomResponse,
-        sender: "bot",
-        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      }
-
-      setMessages((prev) => [...prev, botMessage])
-    }, 1000)
+    setMessages((prev) => [...prev, botMessage])
   }
 
   const handleKeyPress = (e) => {
@@ -83,34 +79,34 @@ export default function ChatBot() {
           {messages.map((message) => (
             <motion.div
               key={message.id}
-              className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"} mb-4`}
+              className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} mb-4`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
               <div
-                className={`flex items-start gap-3 max-w-[80%] ${message.sender === "user" ? "flex-row-reverse" : ""}`}
+                className={`flex items-start gap-3 max-w-[80%] ${message.role === "user" ? "flex-row-reverse" : ""}`}
               >
                 <div
                   className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                    message.sender === "user"
+                    message.role === "user"
                       ? "bg-gradient-to-r from-[#9B65FF] to-[#F2613F] text-white"
                       : "bg-gray-100"
                   }`}
                 >
-                  {message.sender === "user" ? <User size={16} /> : <Bot size={16} />}
+                  {message.role === "user" ? <User size={16} /> : <Bot size={16} />}
                 </div>
                 <div>
                   <div
                     className={`p-3 rounded-lg ${
-                      message.sender === "user"
+                      message.role === "user"
                         ? "bg-gradient-to-r from-[#9B65FF] to-[#F2613F] text-white"
                         : "bg-gray-100"
                     }`}
                   >
-                    <p className="text-sm">{message.text}</p>
+                    <p className="text-sm">{message.content}</p>
                   </div>
-                  <p className={`text-xs mt-1 ${message.sender === "user" ? "text-right" : ""} text-gray-500`}>
+                  <p className={`text-xs mt-1 ${message.role === "user" ? "text-right" : ""} text-gray-500`}>
                     {message.time}
                   </p>
                 </div>

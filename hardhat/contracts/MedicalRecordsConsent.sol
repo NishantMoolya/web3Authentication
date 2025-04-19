@@ -46,7 +46,9 @@ contract MedicalRecordsConsent {
     }
 
     // ========== Uploading Records ==========
-    function uploadRecordByPatient(string calldata cid) external onlyRole(Role.Patient) {
+    function uploadRecordByPatient2(string calldata cid) public 
+    // onlyRole(Role.Patient) 
+    {
         require(roles[msg.sender] == Role.Patient, "Not a registered patient");
         patientRecords[msg.sender].push(cid);
         emit RecordUploaded(msg.sender, msg.sender, cid);
@@ -87,7 +89,7 @@ contract MedicalRecordsConsent {
 
     function revokeAccess(address doctor) external onlyRole(Role.Patient) {
         accessPermissions[msg.sender][doctor].isAllowed = false;
-        emit AccessRevoked(msg.sender, doctor);
+        emit AccessRevoked(msg.sender, doctor); 
     }
 
     // ========== Doctor: View Patient Records ==========

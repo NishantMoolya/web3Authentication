@@ -11,14 +11,13 @@ const registerAsPatient = async (contract) => {
       alert("Registration failed!");
     }
   };
-  
 
-const uploadRecord = async (contract,cid) => {
+  const uploadRecord = async (contract,cid) => {
   console.log("contract",contract);
   
     if (!contract) return;
     try {
-      const tx = await contract.uploadRecordByPatient(cid);
+      const tx = await contract.uploadRecordByPatient2(cid);
       console.log("tx",tx);
       
       const _ = await tx.wait();

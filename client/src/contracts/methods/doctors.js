@@ -37,3 +37,8 @@ const viewRecords = async (contract,patientAddress) => {
     }
   };
  export { registerAsDoctor, requestAccess, viewRecords };
+
+
+
+
+ 
