@@ -5,10 +5,11 @@ async function main() {
 const MedicalRecordsConsent = await hre.ethers.getContractFactory("MedicalRecordsConsent");
   const medicalRecordsConsent = await MedicalRecordsConsent.deploy(); // creating an instance: 
 
-  await medicalRecordsConsent.deployed();
+  await medicalRecordsConsent.waitForDeployment();
+  const address = await medicalRecordsConsent.getAddress();
 
   console.log(
-    ` deployed to ${medicalRecordsConsent.address}`
+    ` deployed to ${address}`
   );
 }
 

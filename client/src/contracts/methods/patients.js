@@ -1,4 +1,6 @@
-const registerAsPatient = async () => {
+const registerAsPatient = async (contract) => {
+  // console.log("contract",contract);
+  
     if (!contract) return;
     try {
       const tx = await contract.registerAsPatient();
@@ -12,12 +14,18 @@ const registerAsPatient = async () => {
   
 
 const uploadRecord = async (contract,cid) => {
+  console.log("contract",contract);
+  
     if (!contract) return;
     try {
       const tx = await contract.uploadRecordByPatient(cid);
-      await tx.wait();
+      console.log("tx",tx);
+      
+      const _ = await tx.wait();
+      console.log("_",_);
+      
       alert('Record uploaded successfully.');
-      fetchMyRecords();
+      // fetchMyRecords();
     } catch (error) {
       console.error('Error uploading record:', error);
     }
@@ -66,3 +74,13 @@ const uploadRecord = async (contract,cid) => {
       return { data:null,error:"Error fetching records" }
     }
   };
+
+  export {
+    registerAsPatient,
+    uploadRecord,
+    approveAccess,
+    revokeAccess,
+    fetchPendingRequests,
+    fetchMyRecords
+  };
+  

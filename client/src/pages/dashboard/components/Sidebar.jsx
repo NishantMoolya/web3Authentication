@@ -42,19 +42,19 @@ const Sidebar = () => {
     {
       name: "Permissions",
       icon: <Shield size={20} />,
-      path: "/dasboard/permissions",
+      path: "/dashboard/permissions",
       active: location.pathname.includes("permissions"),
     },
     {
       name: "Records",
       icon: <FileText size={20} />,
-      path: "/dasboard/records",
+      path: "/dashboard/records",
       active: location.pathname.includes("records"),
     },
     {
       name: "Chat",
       icon: <MessageSquare size={20} />,
-      path: "/dasboard/chat",
+      path: "/dashboard/chat",
       active: location.pathname.includes("chat"),
     },
   ]

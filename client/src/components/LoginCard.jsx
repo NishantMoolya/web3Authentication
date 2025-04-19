@@ -7,10 +7,11 @@ import { setToken } from "../utils/authToken"
 import AuthContext from "../context/AuthContext"
 import { motion } from "framer-motion"
 import { LockKeyhole, User, UserCog, Stethoscope } from "lucide-react"
+import { registerAsPatient } from "../contracts/methods/patients.js"
+import {registerAsDoctor} from "../contracts/methods/doctors.js"
 
 export default function LoginCard() {
-  const { connectWallet } = useWallet()
-
+  const { connectWallet , getContract} = useWallet()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [activeButton, setActiveButton] = useState(null)
@@ -52,7 +53,7 @@ export default function LoginCard() {
   }
 
   // Handler for verifying the signature
-  const handleVerifySignature = async (signer, nonce, role) => {
+  const handleVerifySignature = async (signer, nonce, role, contract) => {
     try {
       const walletAddress = await signer?.getAddress()
 
@@ -67,9 +68,23 @@ export default function LoginCard() {
       })
 
       const data = await response.json()
+    
       if (response.status === 201) {
+        if(role==='doctor'){
+          console.log("Entering Doctor")
+          await registerAsDoctor(contract);
+        }
+        else if(role==='patient'){
+          console.log("Entering Patient")
+          console.log("contract -1 ",contract);
+          
+          await registerAsPatient(contract);
+        }
+         else{
+          return;
+         }
         setToken(data.data.token)
-        loginUser(walletAddress, role, true)
+        loginUser(walletAddress, role, contract, true)
         navigate("/profile")
         setError("")
       } else {
@@ -86,11 +101,11 @@ export default function LoginCard() {
     setActiveButton(role)
     setError("")
     try {
-      const signer = await connectWallet()
+      const { signer, contract } = await connectWallet()
       if (!signer) return
       const data = await handleGetNonce(signer)
       if (!data.nonce) return
-      await handleVerifySignature(signer, data.nonce, role)
+      await handleVerifySignature(signer, data.nonce, role, contract)
     } catch (err) {
       console.error("Login error:", err)
       setError("Something went wrong during login")

@@ -1,4 +1,6 @@
-const registerAsDoctor = async () => {
+
+
+const registerAsDoctor = async (contract) => { 
     if (!contract) return;
     try {
       const tx = await contract.registerAsDoctor();
@@ -34,3 +36,4 @@ const viewRecords = async (contract,patientAddress) => {
       return {data:null,error:"Error viewing records"};
     }
   };
+ export { registerAsDoctor, requestAccess, viewRecords };

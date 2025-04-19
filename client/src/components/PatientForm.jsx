@@ -2,7 +2,7 @@
 
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { User, Mail, Phone, MapPin, CalendarHeart, Droplet } from 'lucide-react'
@@ -18,6 +18,10 @@ export default function PatientForm() {
     phone: '',
     city: '',
   })
+
+  useEffect(() => {
+    navigate('/dashboard');
+  },[])
 
   const handleChange = (e) => {
     setFormData((prev) => ({

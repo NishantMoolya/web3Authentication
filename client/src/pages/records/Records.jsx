@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useContext } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { handleIPFSUpload } from "../../utils/fileUploadService"
+import { uploadRecord } from '../../contracts/methods/patients'
 import {
   FileText,
   Plus,
@@ -23,6 +24,8 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react"
+import AuthContext from "../../context/AuthContext"
+import useWallet from "../../hooks/useWallet"
 
 export default function Records() {
   const [records, setRecords] = useState([
@@ -33,6 +36,8 @@ export default function Records() {
     { id: 5, name: "Product Roadmap", type: "PPTX", size: "4.1 MB", date: "2023-08-05", status: "Active" },
     { id: 6, name: "Employee Handbook", type: "PDF", size: "1.5 MB", date: "2023-07-12", status: "Archived" },
   ])
+  
+  const { userData } = useContext(AuthContext);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
@@ -40,6 +45,8 @@ export default function Records() {
   const [uploadStatus, setUploadStatus] = useState("idle") // idle, uploading, success, error
   const [uploadError, setUploadError] = useState(null)
   const [viewingFile, setViewingFile] = useState(null)
+
+  const { connectWallet } = useWallet();
 
   const fileInputRef = useRef(null)
 
@@ -83,7 +90,6 @@ export default function Records() {
     setUploadStatus("uploading")
     setUploadError(null)
 
-    const hashIds = [];
     try {
       console.log("running");
       
@@ -92,8 +98,9 @@ export default function Records() {
       for(const file of selectedFiles){        
       const hashId = await handleIPFSUpload(file.file);
       // console.log("hashid",hashId);
-      
-      if (hashId) hashIds.push(hashId);
+      console.log(userData);
+      // const { contract } = await connectWallet();
+      await uploadRecord(userData.contract,hashId)
       }
   
       // Simulate successful upload
