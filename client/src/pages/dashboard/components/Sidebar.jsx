@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { NavLink, useLocation } from "react-router-dom"
 import { LayoutDashboard, Shield, FileText, MessageSquare, User, Settings, LogOut, Menu, X } from "lucide-react"
 import { motion } from "framer-motion"
+import AuthContext from "../../../context/AuthContext"
 
 const Sidebar = () => {
   const location = useLocation()
@@ -60,8 +61,10 @@ const Sidebar = () => {
 
   const bottomNavItems = [
     { name: "Profile", icon: <User size={20} />, path: "/profile" },
-    { name: "Logout", icon: <LogOut size={20} />, path: "/logout" },
+    { name: "Logout", icon: <LogOut size={20} />, path: "/login" },
   ]
+
+  const { logoutUser } = useContext(AuthContext);
 
   return (
     <>
@@ -137,6 +140,7 @@ const Sidebar = () => {
         <div className="py-6 px-3 space-y-1 border-t">
           {bottomNavItems.map((item) => (
             <NavLink
+            onClick={() => { if(item.name == "Logout") logoutUser()}}
               key={item.name}
               to={item.path}
               className="flex items-center px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-200"

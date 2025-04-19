@@ -5,7 +5,7 @@ import AuthContext from './AuthContext';
 const AuthProvider = ({ children }) => {
   const initData = {
     walletAddress:"",
-    role:"",
+    role:"staff",
     auth:false
   }
 
