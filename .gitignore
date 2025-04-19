@@ -7,5 +7,5 @@ node_modules
 build
 
 blockchain
-hardhat
+# hardhat
 chatserver
